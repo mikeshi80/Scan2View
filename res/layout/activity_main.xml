@@ -1,7 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:columnCount="2" 
+    android:rowCount="4">
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,17 +14,9 @@
     <TextView android:id="@+id/selected_folder"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:text="test dir"
         android:textSize="24dp"
         tools:context=".MainActivity" />
-    <Button android:id="@+id/select_folder"
-        android:text="Choose folder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/selected_folder"
-        android:layout_alignRight="@id/selected_folder"/>
     
     <Button android:id="@+id/scan_barcode"
         android:text="Scan Barcode"
@@ -32,4 +26,4 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"/>
 
-</RelativeLayout>
+</GridLayout>

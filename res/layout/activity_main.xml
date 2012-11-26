@@ -1,36 +1,80 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="2" 
-    android:rowCount="4">
+    android:orientation="vertical"
+    android:layout_margin="10dp">"
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_columnSpan="2"
-        android:layout_row="0"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="1dp"
+        android:paddingTop="20dp"
+        android:background="#dddddd"
         android:text="Scan to Show"
-        android:textSize="50dp" />
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="50sp"
+        android:drawableTop="@drawable/bg_zebar_barcode"
+        android:drawablePadding="20dp" />
 
     <TextView
         android:id="@+id/selected_folder"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="2"
-        android:layout_row="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:layout_marginBottom="1dp"
+        android:background="#dddddd"
         android:text="test dir"
-        android:textSize="24dp"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
         tools:context=".MainActivity" />
     
-    <Button android:id="@+id/scan_barcode"
-        android:text="Scan Barcode"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"/>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="1dp"
+            android:orientation="vertical" >
 
-</GridLayout>
+            <TextView
+                android:id="@+id/enter_barcode"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="1dp"
+                android:background="#dddddd"
+                android:text="Manual Enter"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/bg_manual_enter"
+                android:drawablePadding="10dp" />
+
+            <TextView
+                android:id="@+id/scan_barcode"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#dddddd"
+                android:text="Scan Barcode"
+                android:textSize="30sp"
+                android:textColor="@android:color/black"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/bg_scan"
+                android:drawablePadding="10dp" />
+        </LinearLayout>
+    
+        <ListView android:id="@+id/history"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#dddddd"/>
+	</LinearLayout>
+</LinearLayout>

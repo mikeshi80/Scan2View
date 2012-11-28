@@ -17,6 +17,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 	private TextView mDir;
 	private TextView mScan;
+	private static final int SET_DIR = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private void checkIfDirSpecified() {
     	
     	File external = Environment.getExternalStorageDirectory();
+    	if (!external.isDirectory()) {
+    		mDir.setText(external.getAbsolutePath());
+    	}
 	}
 
 	@Override
@@ -48,7 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			integrator.initiateScan();
 		} else if (v == mDir) {
 			Intent intent = new Intent(getApplicationContext(), BrowserActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, SET_DIR);
 		}
 		
 	}
@@ -58,8 +62,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		  IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 		  if (scanResult != null) {
 		    // handle scan result
+		  } else {
+			  switch (requestCode) {
+			  case SET_DIR:
+				  if (data != null) {
+					  mDir.setText(data.getStringExtra(BrowserActivity.FOLDER_PATH));
+				  }
+				  break;
+			  }
 		  }
-		  // else continue with any other code you need in the method
 	}
     
 	

@@ -23,8 +23,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
         checkIfDirSpecified();
         
-        mScan = (TextView) findViewById(R.id.scan_barcode);
+        mScan = (TextView) findViewById(R.id.main_scan_barcode);
 		mScan.setOnClickListener(this);
+		
+		mDir = (TextView) findViewById(R.id.main_selected_folder);
+		mDir.setOnClickListener(this);
     }
 
     private void checkIfDirSpecified() {
@@ -43,6 +46,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		if (v == mScan) {
 			IntentIntegrator integrator = new IntentIntegrator(this);
 			integrator.initiateScan();
+		} else if (v == mDir) {
+			Intent intent = new Intent(getApplicationContext(), BrowserActivity.class);
+			startActivity(intent);
 		}
 		
 	}

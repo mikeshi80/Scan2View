@@ -20,7 +20,7 @@
         android:drawablePadding="20dp" />
 
     <TextView
-        android:id="@+id/selected_folder"
+        android:id="@+id/main_selected_folder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
@@ -44,7 +44,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/enter_barcode"
+                android:id="@+id/main_enter_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -58,7 +58,7 @@
                 android:drawablePadding="10dp" />
 
             <TextView
-                android:id="@+id/scan_barcode"
+                android:id="@+id/main_scan_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -71,7 +71,7 @@
                 android:drawablePadding="10dp" />
         </LinearLayout>
     
-        <ListView android:id="@+id/history"
+        <ListView android:id="@+id/main_history"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

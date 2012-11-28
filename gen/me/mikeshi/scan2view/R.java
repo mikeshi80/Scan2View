@@ -18,14 +18,19 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int enter_barcode=0x7f070001;
-        public static final int history=0x7f070003;
-        public static final int menu_settings=0x7f070004;
-        public static final int scan_barcode=0x7f070002;
-        public static final int selected_folder=0x7f070000;
+        public static final int browser_cancel=0x7f070000;
+        public static final int browser_choose=0x7f070002;
+        public static final int browser_choosed_dir=0x7f070001;
+        public static final int browser_dir_list=0x7f070003;
+        public static final int main_enter_barcode=0x7f070005;
+        public static final int main_history=0x7f070007;
+        public static final int main_scan_barcode=0x7f070006;
+        public static final int main_selected_folder=0x7f070004;
+        public static final int menu_settings=0x7f070008;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
+        public static final int activity_browser=0x7f030000;
+        public static final int activity_main=0x7f030001;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;

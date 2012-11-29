@@ -3,6 +3,7 @@ package me.mikeshi.scan2view;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import me.mikeshi.scan2view.adapters.HistoryAdapter;
 import me.mikeshi.scan2view.utils.AppConstants;
@@ -54,14 +55,35 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		
 		mHistory = (ListView) findViewById(R.id.main_history);
 		
-		initHistory(savedInstanceState);
+		initHistory();
     }
+    
+    
 
-    private void initHistory(Bundle savedInstanceState) {
+    @Override
+	protected void onDestroy() {
+    	HistoryAdapter ha = (HistoryAdapter) mHistory.getAdapter();
+    	
+    	StringBuilder sb = new StringBuilder();
+    	for(String s : ha.getHistories()) {
+    		sb.append(":").append(s);
+    	}
+    	
+    	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    	preferences.edit().putString(AppConstants.HISTORY, sb.length()>0?sb.substring(1) : "").commit();
+		super.onDestroy();
+	}
+
+
+
+	private void initHistory() {
     	HistoryAdapter ha = new HistoryAdapter();
     	
-    	if (savedInstanceState != null && savedInstanceState.containsKey(AppConstants.HISTORY)) {
-	    	ArrayList<String> histories = savedInstanceState.getStringArrayList(AppConstants.HISTORY);
+    	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    	
+    	String historyStr = preferences.getString(AppConstants.HISTORY, null);
+    	if (historyStr != null && historyStr.length() > 0) {
+	    	ArrayList<String> histories = new ArrayList<String>(Arrays.asList(historyStr.split(":")));
 	    	ha.setHistories(histories);
     	} else {
     		ha.setHistories(new ArrayList<String>());
@@ -129,9 +151,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 		if (scanResult != null) {
-			  
-			final String barcode = scanResult.getContents();
-			showFileByBarcode(barcode);
+			if (requestCode == Activity.RESULT_OK) {
+				final String barcode = scanResult.getContents();
+				showFileByBarcode(barcode);
+			}
 		    
 		} else {
 			switch (requestCode) {
@@ -206,24 +229,5 @@ public class MainActivity extends Activity implements View.OnClickListener{
     	ha.getHistories().add(filename);
     	ha.notifyDataSetChanged();
 	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
-		outState.putStringArrayList(AppConstants.HISTORY, ha.getHistories());
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		
-		if (savedInstanceState.containsKey(AppConstants.HISTORY)) {
-			HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
-			ha.setHistories(savedInstanceState.getStringArrayList(AppConstants.HISTORY));
-		}
-	}
-
-   
 	
 }

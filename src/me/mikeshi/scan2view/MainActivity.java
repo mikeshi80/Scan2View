@@ -1,17 +1,23 @@
 package me.mikeshi.scan2view;
 
 import java.io.File;
+import java.io.FilenameFilter;
+
+import me.mikeshi.scan2view.utils.AppConstants;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.Menu;
+import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
-import android.os.Bundle;
-import android.os.Environment;
-import android.app.Activity;
-import android.content.Intent;
-import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
@@ -22,19 +28,28 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkIfDirSpecified();
         
         mScan = (TextView) findViewById(R.id.main_scan_barcode);
 		mScan.setOnClickListener(this);
 		
 		mDir = (TextView) findViewById(R.id.main_selected_folder);
 		mDir.setOnClickListener(this);
+		
+		initDir();
     }
 
-    private void checkIfDirSpecified() {
+    private void initDir() {
     	
     	File external = Environment.getExternalStorageDirectory();
-    	if (!external.isDirectory()) {
+    	
+    	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    	if (preferences.contains(AppConstants.FOLDER_PATH)) {
+    		mDir.setText(preferences.getString(AppConstants.FOLDER_PATH, 
+    				external.getAbsolutePath()));
+    	}
+    	
+    	File f = new File(mDir.getText().toString());
+    	if (!f.isDirectory()) {
     		mDir.setText(external.getAbsolutePath());
     	}
 	}
@@ -60,19 +75,61 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		  IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+		  File d = new File(mDir.getText().toString());
 		  if (scanResult != null) {
-		    // handle scan result
+		    final String barcode = scanResult.getContents();
+		    
+		    String[] files = d.list(new FilenameFilter() {
+				
+				@Override
+				public boolean accept(File dir, String filename) {
+					if (!new File(dir, filename).isFile()) return false; 
+					
+					int index = filename.lastIndexOf(".");
+					
+					if (index == -1) return false;
+					
+					String name = filename.substring(0, index);
+					return name.compareToIgnoreCase(barcode) == 0;
+				}
+			});
+		    
+			switch (files.length) {
+		    case 0:
+		    	Toast.makeText(this, "There is no corresponding document for barcode " + barcode, Toast.LENGTH_LONG).show();
+		    	break;
+		    case 1:
+		    	String filename = files[0];
+		    	showFile(d, filename);
+		    	break;
+		    default:
+		    	break;
+		    }
+		    
 		  } else {
 			  switch (requestCode) {
 			  case SET_DIR:
-				  if (data != null) {
-					  mDir.setText(data.getStringExtra(BrowserActivity.FOLDER_PATH));
-				  }
+				if (data != null) {
+					String path = data.getStringExtra(AppConstants.FOLDER_PATH);
+					mDir.setText(path);
+					getPreferences(Activity.MODE_PRIVATE).edit()
+							.putString(AppConstants.FOLDER_PATH, path).commit();
+				}
 				  break;
 			  }
 		  }
 	}
     
-	
+	private void showFile(File dir, String filename) {
+    	Intent view = new Intent(Intent.ACTION_VIEW);
+    	int ext_dot = filename.lastIndexOf(".");
+    	
+    	if (ext_dot == -1) return;
+    	
+		String extension = filename.substring(ext_dot + 1);
+    	String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+		view.setDataAndType(Uri.fromFile((new File(dir, filename))), mimeType);
+    	startActivity(view);
+	}
     
 }

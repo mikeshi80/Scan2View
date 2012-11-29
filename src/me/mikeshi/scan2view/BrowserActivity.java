@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.util.Arrays;
 
 import me.mikeshi.scan2view.adapters.FolderAdapter;
+import me.mikeshi.scan2view.utils.AppConstants;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,8 +21,6 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 
 	private GridView mDirList;
 	
-	public static final String FOLDER_PATH = "folder path";
-
 	private TextView mDir; 
 
 	@Override
@@ -43,7 +42,7 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 			@Override
 			public void onClick(View v) {
 				Intent result = new Intent();
-				result.putExtra(FOLDER_PATH, mDir.getText().toString());
+				result.putExtra(AppConstants.FOLDER_PATH, mDir.getText().toString());
 				setResult(RESULT_OK, result);
 				finish();
 			}
@@ -88,8 +87,8 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 
 	private void initDir(Bundle savedInstanceState) {
 		String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		if (savedInstanceState != null && savedInstanceState.containsKey(FOLDER_PATH)) {
-			String path = savedInstanceState.getString(FOLDER_PATH);
+		if (savedInstanceState != null && savedInstanceState.containsKey(AppConstants.FOLDER_PATH)) {
+			String path = savedInstanceState.getString(AppConstants.FOLDER_PATH);
 			if (path != null) {
 				File dirPath = new File(path);
 				if (dirPath.isDirectory()) {

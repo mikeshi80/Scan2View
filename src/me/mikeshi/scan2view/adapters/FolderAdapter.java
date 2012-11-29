@@ -33,8 +33,8 @@ public class FolderAdapter extends BaseAdapter {
 		TextView view = (TextView) convertView;
 		if (view == null) {
 			view = new TextView(container.getContext());
-			view.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_folder, 0, 0);
-			view.setTextSize(30);
+			view.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_folder, 0, 0);
+			view.setTextSize(24);
 			view.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		

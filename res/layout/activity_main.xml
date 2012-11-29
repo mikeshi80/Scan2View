@@ -74,10 +74,26 @@
                 android:drawablePadding="10dp" />
         </LinearLayout>
     
-        <ListView android:id="@+id/main_history"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#dddddd"/>
+        <LinearLayout android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:orientation="vertical">
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="History"
+                android:textSize="28dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_history"
+                android:drawablePadding="20dp"
+                android:padding="5dp"/>
+	        <ListView android:id="@+id/main_history"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1"
+	            android:background="#dddddd"/>
+        </LinearLayout>
 	</LinearLayout>
 </LinearLayout>

@@ -17,7 +17,19 @@ public final class R {
         public static final int ic_action_search=0x7f020003;
         public static final int ic_folder=0x7f020004;
         public static final int ic_folder_small=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
+        public static final int ic_ft_bmp=0x7f020006;
+        public static final int ic_ft_doc=0x7f020007;
+        public static final int ic_ft_generic=0x7f020008;
+        public static final int ic_ft_gif=0x7f020009;
+        public static final int ic_ft_htm=0x7f02000a;
+        public static final int ic_ft_jpg=0x7f02000b;
+        public static final int ic_ft_pdf=0x7f02000c;
+        public static final int ic_ft_png=0x7f02000d;
+        public static final int ic_ft_tiff=0x7f02000e;
+        public static final int ic_ft_txt=0x7f02000f;
+        public static final int ic_ft_xls=0x7f020010;
+        public static final int ic_history=0x7f020011;
+        public static final int ic_launcher=0x7f020012;
     }
     public static final class id {
         public static final int browser_cancel=0x7f070000;

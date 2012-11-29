@@ -2,8 +2,12 @@ package me.mikeshi.scan2view;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 
+import me.mikeshi.scan2view.adapters.HistoryAdapter;
 import me.mikeshi.scan2view.utils.AppConstants;
+import me.mikeshi.scan2view.utils.AppUtils;
+import me.mikeshi.scan2view.utils.AppUtils.FileInfo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,6 +21,7 @@ import android.view.Menu;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +33,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private TextView mDir;
 	private TextView mScan;
 	private TextView mManual;
+	private ListView mHistory;
+	
 	private static final int SET_DIR = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,22 +51,37 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		mDir.setOnClickListener(this);
 		
 		initDir();
+		
+		mHistory = (ListView) findViewById(R.id.main_history);
+		
+		initHistory(savedInstanceState);
     }
 
-    private void initDir() {
+    private void initHistory(Bundle savedInstanceState) {
+    	HistoryAdapter ha = new HistoryAdapter();
+    	
+    	if (savedInstanceState != null && savedInstanceState.containsKey(AppConstants.HISTORY)) {
+	    	ArrayList<String> histories = savedInstanceState.getStringArrayList(AppConstants.HISTORY);
+	    	ha.setHistories(histories);
+    	} else {
+    		ha.setHistories(new ArrayList<String>());
+    	}
+    	mHistory.setAdapter(ha);
+	}
+
+	private void initDir() {
     	
     	File external = Environment.getExternalStorageDirectory();
     	
     	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
-    	if (preferences.contains(AppConstants.FOLDER_PATH)) {
-    		mDir.setText(preferences.getString(AppConstants.FOLDER_PATH, 
-    				external.getAbsolutePath()));
-    	}
-    	
-    	File f = new File(mDir.getText().toString());
-    	if (!f.isDirectory()) {
-    		mDir.setText(external.getAbsolutePath());
-    	}
+		mDir.setText(preferences.getString(AppConstants.FOLDER_PATH, 
+				external.getAbsolutePath()));
+		File f = new File(mDir.getText().toString());
+		
+		if (!f.isDirectory()) {
+			mDir.setText(external.getAbsolutePath());
+		}
+
 	}
 
 	@Override
@@ -134,12 +156,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			public boolean accept(File dir, String filename) {
 				if (!new File(dir, filename).isFile()) return false; 
 				
-				int index = filename.lastIndexOf(".");
+				FileInfo fileInfo = AppUtils.splitFileName(filename);
 				
-				if (index == -1) return false;
+				if (fileInfo.extension == null) return false;
 				
-				String name = filename.substring(0, index);
-				return name.compareToIgnoreCase(barcode) == 0;
+				return fileInfo.name.compareToIgnoreCase(barcode) == 0;
 			}
 		});
 		
@@ -172,14 +193,37 @@ public class MainActivity extends Activity implements View.OnClickListener{
     
 	private void showFileByPath(File dir, String filename) {
     	Intent view = new Intent(Intent.ACTION_VIEW);
-    	int ext_dot = filename.lastIndexOf(".");
     	
-    	if (ext_dot == -1) return;
+    	FileInfo fileInfo = AppUtils.splitFileName(filename);
     	
-		String extension = filename.substring(ext_dot + 1);
-    	String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    	if (fileInfo.extension == null) return;
+    	
+    	String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileInfo.extension);
 		view.setDataAndType(Uri.fromFile((new File(dir, filename))), mimeType);
     	startActivity(view);
+    	
+    	HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
+    	ha.getHistories().add(filename);
+    	ha.notifyDataSetChanged();
 	}
-    
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
+		outState.putStringArrayList(AppConstants.HISTORY, ha.getHistories());
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		if (savedInstanceState.containsKey(AppConstants.HISTORY)) {
+			HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
+			ha.setHistories(savedInstanceState.getStringArrayList(AppConstants.HISTORY));
+		}
+	}
+
+   
+	
 }

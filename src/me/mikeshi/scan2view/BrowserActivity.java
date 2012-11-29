@@ -54,7 +54,7 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 		
 		mDir = (TextView) findViewById(R.id.browser_choosed_dir);
 		
-		initDir(savedInstanceState);
+		initDir();
 		
 		String path = mDir.getText().toString();
 		listDir(path);
@@ -85,17 +85,14 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 		((FolderAdapter)mDirList.getAdapter()).setFolders(files);
 	}
 
-	private void initDir(Bundle savedInstanceState) {
+	private void initDir() {
+		CharSequence initialPath = getIntent().getCharSequenceExtra(AppConstants.FOLDER_PATH);
 		String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		if (savedInstanceState != null && savedInstanceState.containsKey(AppConstants.FOLDER_PATH)) {
-			String path = savedInstanceState.getString(AppConstants.FOLDER_PATH);
-			if (path != null) {
-				File dirPath = new File(path);
-				if (dirPath.isDirectory()) {
-					mDir.setText(path);
-				} else {
-					mDir.setText(defaultPath);
-				}
+			
+		if (initialPath != null) {
+			File dirPath = new File(initialPath.toString());
+			if (dirPath.isDirectory()) {
+				mDir.setText(initialPath);
 			} else {
 				mDir.setText(defaultPath);
 			}

@@ -75,6 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			integrator.initiateScan();
 		} else if (v == mDir) {
 			Intent intent = new Intent(getApplicationContext(), BrowserActivity.class);
+			intent.putExtra(AppConstants.FOLDER_PATH, mDir.getText());
 			startActivityForResult(intent, SET_DIR);
 		} else if (v == mManual) {
 			onManualEnter();

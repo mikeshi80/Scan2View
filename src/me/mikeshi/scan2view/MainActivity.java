@@ -126,9 +126,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	}
 
 	private void showFileByBarcode(final String barcode) {
-		File d = new File(mDir.getText().toString());
+		final File d = new File(mDir.getText().toString());
 		
-		String[] files = d.list(new FilenameFilter() {
+		final String[] files = d.list(new FilenameFilter() {
 			
 			@Override
 			public boolean accept(File dir, String filename) {
@@ -152,6 +152,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			showFileByPath(d, filename);
 			break;
 		default:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setItems(files, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					showFileByPath(d, files[which]);
+				}
+			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			}).create().show();
 			break;
 		}
 	}

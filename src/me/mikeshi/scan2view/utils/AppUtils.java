@@ -21,6 +21,7 @@ public class AppUtils {
 		mFileTypeExtensionMap.put("bmp", R.drawable.ic_ft_bmp);
 		mFileTypeExtensionMap.put("gif", R.drawable.ic_ft_gif);
 		mFileTypeExtensionMap.put("jpg", R.drawable.ic_ft_jpg);
+		mFileTypeExtensionMap.put("jpeg", R.drawable.ic_ft_jpg);
 		mFileTypeExtensionMap.put("png", R.drawable.ic_ft_png);
 		mFileTypeExtensionMap.put("tif", R.drawable.ic_ft_tiff);
 		mFileTypeExtensionMap.put("tiff", R.drawable.ic_ft_tiff);

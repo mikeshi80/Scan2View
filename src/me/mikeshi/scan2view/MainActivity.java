@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +55,30 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		initDir();
 		
 		mHistory = (ListView) findViewById(R.id.main_history);
+		
+		findViewById(R.id.main_history_clear).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setMessage("Are you sure to clear the history list?")
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
+						ha.getHistories().clear();
+						ha.notifyDataSetChanged();						
+					}
+				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).create().show();
+			}
+		});
 		
 		initHistory();
     }
@@ -89,6 +114,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
     		ha.setHistories(new ArrayList<String>());
     	}
     	mHistory.setAdapter(ha);
+    	
+    	mHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> list, View item,
+					int position, long rowId) {
+				showFileByPath(new File(mDir.getText().toString()), list.getItemAtPosition(position).toString(), false);
+			}
+		});
 	}
 
 	private void initDir() {
@@ -151,7 +185,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 		if (scanResult != null) {
-			if (requestCode == Activity.RESULT_OK) {
+			if (resultCode == Activity.RESULT_OK) {
 				final String barcode = scanResult.getContents();
 				showFileByBarcode(barcode);
 			}
@@ -193,7 +227,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			break;
 		case 1:
 			String filename = files[0];
-			showFileByPath(d, filename);
+			showFileByPath(d, filename, true);
 			break;
 		default:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -201,7 +235,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					showFileByPath(d, files[which]);
+					showFileByPath(d, files[which], true);
 				}
 			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				
@@ -214,7 +248,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		}
 	}
     
-	private void showFileByPath(File dir, String filename) {
+	private void showFileByPath(File dir, String filename, boolean addToHistory) {
     	Intent view = new Intent(Intent.ACTION_VIEW);
     	
     	FileInfo fileInfo = AppUtils.splitFileName(filename);
@@ -225,9 +259,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		view.setDataAndType(Uri.fromFile((new File(dir, filename))), mimeType);
     	startActivity(view);
     	
-    	HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
-    	ha.getHistories().add(filename);
-    	ha.notifyDataSetChanged();
+    	if (addToHistory) {
+	    	HistoryAdapter ha = (HistoryAdapter)mHistory.getAdapter();
+	    	ha.getHistories().add(filename);
+	    	ha.notifyDataSetChanged();
+    	}
 	}
 	
 }

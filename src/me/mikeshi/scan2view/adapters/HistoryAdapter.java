@@ -1,14 +1,11 @@
 package me.mikeshi.scan2view.adapters;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.mikeshi.scan2view.utils.AppUtils;
 import me.mikeshi.scan2view.utils.AppUtils.FileInfo;
-
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -38,8 +35,8 @@ public class HistoryAdapter extends BaseAdapter {
 		TextView tv = (TextView) convertView;
 		if (tv == null) {
 			tv = new TextView(parent.getContext());
-//			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			tv.setTextSize(24);
+			tv.setTextColor(0xff000000);
 			tv.setCompoundDrawablePadding(10);
 		}
 		

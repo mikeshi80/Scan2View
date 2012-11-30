@@ -15,33 +15,35 @@ public final class R {
         public static final int bg_scan=0x7f020001;
         public static final int bg_zebar_barcode=0x7f020002;
         public static final int ic_action_search=0x7f020003;
-        public static final int ic_folder=0x7f020004;
-        public static final int ic_folder_small=0x7f020005;
-        public static final int ic_ft_bmp=0x7f020006;
-        public static final int ic_ft_doc=0x7f020007;
-        public static final int ic_ft_generic=0x7f020008;
-        public static final int ic_ft_gif=0x7f020009;
-        public static final int ic_ft_htm=0x7f02000a;
-        public static final int ic_ft_jpg=0x7f02000b;
-        public static final int ic_ft_pdf=0x7f02000c;
-        public static final int ic_ft_png=0x7f02000d;
-        public static final int ic_ft_tiff=0x7f02000e;
-        public static final int ic_ft_txt=0x7f02000f;
-        public static final int ic_ft_xls=0x7f020010;
-        public static final int ic_history=0x7f020011;
-        public static final int ic_launcher=0x7f020012;
+        public static final int ic_clear=0x7f020004;
+        public static final int ic_folder=0x7f020005;
+        public static final int ic_folder_small=0x7f020006;
+        public static final int ic_ft_bmp=0x7f020007;
+        public static final int ic_ft_doc=0x7f020008;
+        public static final int ic_ft_generic=0x7f020009;
+        public static final int ic_ft_gif=0x7f02000a;
+        public static final int ic_ft_htm=0x7f02000b;
+        public static final int ic_ft_jpg=0x7f02000c;
+        public static final int ic_ft_pdf=0x7f02000d;
+        public static final int ic_ft_png=0x7f02000e;
+        public static final int ic_ft_tiff=0x7f02000f;
+        public static final int ic_ft_txt=0x7f020010;
+        public static final int ic_ft_xls=0x7f020011;
+        public static final int ic_history=0x7f020012;
+        public static final int ic_launcher=0x7f020013;
     }
     public static final class id {
         public static final int browser_cancel=0x7f070000;
         public static final int browser_choose=0x7f070002;
         public static final int browser_choosed_dir=0x7f070001;
         public static final int browser_dir_list=0x7f070003;
-        public static final int dialog_enter_barcode=0x7f070008;
+        public static final int dialog_enter_barcode=0x7f070009;
         public static final int main_enter_barcode=0x7f070005;
-        public static final int main_history=0x7f070007;
+        public static final int main_history=0x7f070008;
+        public static final int main_history_clear=0x7f070007;
         public static final int main_scan_barcode=0x7f070006;
         public static final int main_selected_folder=0x7f070004;
-        public static final int menu_settings=0x7f070009;
+        public static final int menu_settings=0x7f07000a;
     }
     public static final class layout {
         public static final int activity_browser=0x7f030000;

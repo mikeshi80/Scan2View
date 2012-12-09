@@ -7,7 +7,7 @@
     <TextView android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter the barcode"
-        android:textSize="15sp"/>
+        android:textSize="24sp"/>
     
     <EditText android:id="@+id/dialog_enter_barcode"
         android:layout_width="match_parent"

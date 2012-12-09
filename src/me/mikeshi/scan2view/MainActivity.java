@@ -1,9 +1,10 @@
 package me.mikeshi.scan2view;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.mikeshi.scan2view.adapters.HistoryAdapter;
 import me.mikeshi.scan2view.utils.AppConstants;
@@ -11,10 +12,12 @@ import me.mikeshi.scan2view.utils.AppUtils;
 import me.mikeshi.scan2view.utils.AppUtils.FileInfo;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -36,10 +39,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private TextView mScan;
 	private TextView mManual;
 	private ListView mHistory;
+	private Map<String, String> mPaths;
 	
 	private static final int SET_DIR = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
+    	mPaths =  new HashMap<String, String>();
+    	
+    	pb = new ProgressDialog(this); 
+    	pb.setTitle("Scanning Files");
+		pb.setCancelable(false);
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
@@ -83,9 +94,56 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		initHistory();
     }
     
-    
-
     @Override
+	protected void onResume() {
+    	
+    	final String path = mDir.getText().toString();
+    	
+    	
+		scanDir(path);
+		
+		super.onResume();
+	}
+
+	private void scanDir(final String path) {
+		new AsyncTask<Void, Void, Boolean>() {
+			
+			@Override
+			protected void onPreExecute() {
+				pb.show();
+			}
+
+			@Override
+			protected Boolean doInBackground(final Void... params) {
+				scanDir(new File(path));
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(final Boolean result) {
+				pb.dismiss();
+			}
+			
+		}.execute();
+	}
+
+
+    private ProgressDialog pb;
+
+	private void scanDir(final File file) {
+		if (!file.isDirectory()) return;
+		
+		for (final File f : file.listFiles()) {
+			if (f.isFile()) {
+				mPaths.put(f.getName(), f.getAbsolutePath());
+			} else if (f.isDirectory()) {
+				scanDir(f);
+			}
+		}
+				
+	}
+
+	@Override
 	protected void onDestroy() {
     	HistoryAdapter ha = (HistoryAdapter) mHistory.getAdapter();
     	
@@ -102,7 +160,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
 	private void initHistory() {
-    	HistoryAdapter ha = new HistoryAdapter();
+    	HistoryAdapter ha = new HistoryAdapter(this);
     	
     	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
     	
@@ -120,7 +178,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			@Override
 			public void onItemClick(AdapterView<?> list, View item,
 					int position, long rowId) {
-				showFileByPath(new File(mDir.getText().toString()), list.getItemAtPosition(position).toString(), false);
+				showFileByPath(list.getItemAtPosition(position).toString(), false);
 			}
 		});
 	}
@@ -130,12 +188,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
     	File external = Environment.getExternalStorageDirectory();
     	
     	SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+		String defaultPath = external.getAbsolutePath() + "/" + AppConstants.DEFAULT_PATH;
 		mDir.setText(preferences.getString(AppConstants.FOLDER_PATH, 
-				external.getAbsolutePath()));
+				defaultPath));
 		File f = new File(mDir.getText().toString());
 		
 		if (!f.isDirectory()) {
-			mDir.setText(external.getAbsolutePath());
+			mDir.setText(defaultPath);
 		}
 
 	}
@@ -198,6 +257,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 					mDir.setText(path);
 					getPreferences(Activity.MODE_PRIVATE).edit()
 							.putString(AppConstants.FOLDER_PATH, path).commit();
+					
+			    	scanDir(path);
 				}
 				  break;
 			  }
@@ -205,50 +266,25 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	}
 
 	private void showFileByBarcode(final String barcode) {
-		final File d = new File(mDir.getText().toString());
-		
-		final String[] files = d.list(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String filename) {
-				if (!new File(dir, filename).isFile()) return false; 
-				
-				FileInfo fileInfo = AppUtils.splitFileName(filename);
-				
-				if (fileInfo.extension == null) return false;
-				
-				return fileInfo.name.compareToIgnoreCase(barcode) == 0;
+
+		String found = null;
+		for (String name : mPaths.keySet()) {
+			FileInfo fileInfo = AppUtils.splitFileName(name);
+			if (fileInfo.name.compareToIgnoreCase(barcode) == 0) {
+				found = mPaths.get(name);
+				break;
 			}
-		});
+		}
 		
-		switch (files.length) {
-		case 0:
+		
+		if (found == null || found.length() == 0) {
 			Toast.makeText(this, "There is no corresponding document for barcode " + barcode, Toast.LENGTH_LONG).show();
-			break;
-		case 1:
-			String filename = files[0];
-			showFileByPath(d, filename, true);
-			break;
-		default:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setItems(files, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					showFileByPath(d, files[which], true);
-				}
-			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-				}
-			}).create().show();
-			break;
+		} else {
+			showFileByPath(found, true);
 		}
 	}
     
-	private void showFileByPath(File dir, String filename, boolean addToHistory) {
+	private void showFileByPath(String filename, boolean addToHistory) {
     	Intent view = new Intent(Intent.ACTION_VIEW);
     	
     	FileInfo fileInfo = AppUtils.splitFileName(filename);
@@ -256,7 +292,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     	if (fileInfo.extension == null) return;
     	
     	String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileInfo.extension);
-		view.setDataAndType(Uri.fromFile((new File(dir, filename))), mimeType);
+		view.setDataAndType(Uri.fromFile((new File(filename))), mimeType);
     	startActivity(view);
     	
     	if (addToHistory) {

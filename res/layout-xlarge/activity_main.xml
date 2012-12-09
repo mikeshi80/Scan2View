@@ -3,36 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dp" >
+    android:layout_margin="10dp">"
 
-    
-    <TextView
+	<TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginBottom="1dp"
-        android:paddingRight="20dp"
+        android:paddingTop="20dp"
         android:background="#dddddd"
         android:text="Scan to Show"
         android:textColor="@android:color/black"
         android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:drawableLeft="@drawable/bg_zebar_barcode"
-        android:drawablePadding="5dp"
-        android:padding="5dp" />
+        android:textSize="50sp"
+        android:drawableTop="@drawable/bg_zebar_barcode"
+        android:drawablePadding="20dp" />
+    
+ 
 
     <TextView
         android:id="@+id/main_selected_folder"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
+        android:layout_height="dp"
         android:layout_marginBottom="1dp"
+        android:layout_weight="0.2"
         android:background="#dddddd"
-        android:gravity="center_vertical"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
         android:drawableLeft="@drawable/ic_folder_small"
         android:drawablePadding="10dp"
+        android:gravity="center_vertical"
         android:paddingLeft="20dp"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
         tools:context=".MainActivity" />
     
     <LinearLayout android:layout_width="match_parent"
@@ -51,15 +52,15 @@
                 android:id="@+id/main_enter_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginBottom="1dp"
+                android:layout_weight="1"
                 android:background="#dddddd"
-                android:text="Manual Enter"
-                android:textSize="15sp"
-                android:textColor="@android:color/black"
-                android:gravity="center_vertical"
                 android:drawableLeft="@drawable/bg_manual_enter"
-                android:drawablePadding="10dp" />
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="Manual Enter"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/main_scan_barcode"
@@ -67,12 +68,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="#dddddd"
-                android:text="Scan Barcode"
-                android:textSize="15sp"
-                android:textColor="@android:color/black"
-                android:gravity="center_vertical"
                 android:drawableLeft="@drawable/bg_scan"
-                android:drawablePadding="10dp" />
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="Scan Barcode"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
         </LinearLayout>
     
         <LinearLayout android:layout_width="0dp"
@@ -81,30 +83,35 @@
 	            android:orientation="vertical">
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-	            <TextView android:layout_width="0dp"
+
+	            <TextView
+	                android:layout_width="0dp"
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
-	                android:text="History"
-	                android:textSize="28dp"
-	                android:textStyle="bold"
-	                android:textColor="@android:color/black"
 	                android:background="#d3d3d3"
-	                android:gravity="center"
 	                android:drawableLeft="@drawable/ic_history"
 	                android:drawablePadding="20dp"
-	                android:padding="5dp"/>
-	            <TextView android:id="@+id/main_history_clear"
+	                android:gravity="center"
+	                android:padding="5dp"
+	                android:text="History"
+	                android:textColor="@android:color/black"
+	                android:textSize="15sp"
+	                android:textStyle="bold" />
+
+	            <TextView
+	                android:id="@+id/main_history_clear"
 	                android:layout_width="wrap_content"
 	                android:layout_height="match_parent"
 	                android:layout_marginLeft="1dp"
+	                android:background="#d3d3d3"
+	                android:drawableLeft="@drawable/ic_clear"
+	                android:gravity="center"
 	                android:paddingLeft="10dp"
 	                android:paddingRight="10dp"
-	                android:gravity="center"
 	                android:text="Clear"
-	                android:textSize="15sp"
-	                android:textColor="@android:color/black" 
-	                android:drawableLeft="@drawable/ic_clear"
-	                android:background="#d3d3d3"/>
+	                android:textColor="@android:color/black"
+	                android:textSize="10sp" />
+
             </LinearLayout>
 	        <ListView android:id="@+id/main_history"
 	            android:layout_width="match_parent"

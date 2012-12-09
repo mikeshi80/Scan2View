@@ -49,7 +49,7 @@ public class BrowserActivity extends Activity implements AdapterView.OnItemClick
 		});
 		
 		mDirList = (GridView) findViewById(R.id.browser_dir_list);
-		FolderAdapter fa = new FolderAdapter();
+		FolderAdapter fa = new FolderAdapter(this);
 		mDirList.setAdapter(fa);
 		
 		mDir = (TextView) findViewById(R.id.browser_choosed_dir);

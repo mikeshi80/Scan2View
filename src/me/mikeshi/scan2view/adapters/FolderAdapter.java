@@ -3,14 +3,26 @@ package me.mikeshi.scan2view.adapters;
 import java.io.File;
 
 import me.mikeshi.scan2view.R;
+import android.content.Context;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class FolderAdapter extends BaseAdapter {
 
+	private int mWidth;
+
+	@SuppressWarnings("deprecation")
+	public FolderAdapter(Context ctx) {
+		WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		mWidth = display.getWidth();
+	}
+	
 	private File[] mFolders = new File[0];
 	
 	@Override
@@ -34,7 +46,11 @@ public class FolderAdapter extends BaseAdapter {
 		if (view == null) {
 			view = new TextView(container.getContext());
 			view.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_folder, 0, 0);
-			view.setTextSize(24);
+			if (mWidth > 1000) {
+				view.setTextSize(24);
+			} else {
+				view.setTextSize(14);
+			}
 			view.setGravity(Gravity.CENTER_HORIZONTAL);
 		}
 		

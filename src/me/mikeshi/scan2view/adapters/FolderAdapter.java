@@ -4,6 +4,8 @@ import java.io.File;
 
 import me.mikeshi.scan2view.R;
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.app.Activity;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -21,9 +23,15 @@ public class FolderAdapter extends BaseAdapter {
 		WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		mWidth = display.getWidth();
+		 DisplayMetrics dm = new DisplayMetrics();
+		((Activity) ctx).getWindowManager().getDefaultDisplay().getMetrics(dm);
+		double x = Math.pow(dm.widthPixels / dm.xdpi, 2);
+		double y = Math.pow(dm.heightPixels / dm.ydpi, 2);
+		mScreenInches = Math.sqrt(x + y);
 	}
 	
 	private File[] mFolders = new File[0];
+	private double mScreenInches;
 	
 	@Override
 	public int getCount() {
@@ -46,7 +54,7 @@ public class FolderAdapter extends BaseAdapter {
 		if (view == null) {
 			view = new TextView(container.getContext());
 			view.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_folder, 0, 0);
-			if (mWidth > 1000) {
+			if (mScreenInches > 8) {
 				view.setTextSize(24);
 			} else {
 				view.setTextSize(14);

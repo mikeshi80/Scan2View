@@ -133,7 +133,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private void scanDir(final File file) {
 		if (!file.isDirectory()) return;
 		
-		for (final File f : file.listFiles()) {
+		File[] files = file.listFiles();
+		
+		if (files == null) return;
+		
+		for (final File f : files) {
 			if (f.isFile()) {
 				mPaths.put(f.getName(), f.getAbsolutePath());
 			} else if (f.isDirectory()) {

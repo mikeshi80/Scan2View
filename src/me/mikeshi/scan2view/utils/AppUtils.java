@@ -54,7 +54,7 @@ public class AppUtils {
 			fi.parent = path.substring(0, index);
 		}
 		
-		index = path.lastIndexOf(".");
+		index = fi.filename.lastIndexOf(".");
 		
 		if (index == -1) {
 			fi.name = fi.filename;
